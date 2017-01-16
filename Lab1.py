@@ -6,8 +6,12 @@ for i in sys.argv[1:]:
 	uniset.append(set(open(i, 'r').read().split()))
 
 def distinct(*params):
-	while params not in uniset:
-		out=params-uniset[]
+	for i in range(0, (len(uniset)-1)):
+		while params not in uniset:
+			out=params-uniset[i]
+	return out
+
+print (distinct(uniset[1]))
 # file1 = open('doc_1.txt', 'r').read()
 # file2 = open('doc_2.txt', 'r').read()
 # file3 = open('doc_3.txt', 'r').read()
