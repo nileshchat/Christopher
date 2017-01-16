@@ -1,29 +1,30 @@
 import sys
 
 uniset = list()  # Declare a universal set which would contain the set of words of every document
+unidict = {}
 
 for i in sys.argv[1:]:
-	uniset.append(set(open(i, 'r').read().split()))
+	uniset.append(open(i, 'r').read().split())
 
-def distinct(*params):
-	for i in range(0, (len(uniset)-1)):
-		while params not in uniset:
-			out=params-uniset[i]
-	return out
+def distinct(params): #Returns a dictionary of words and frequency
+	s1 = set(params)
+	doc_dict = {}
+	for i in s1:
+		doc_dict[i] = params.count(i)
+	
+	return doc_dict
 
-print (distinct(uniset[1]))
-# file1 = open('doc_1.txt', 'r').read()
-# file2 = open('doc_2.txt', 'r').read()
-# file3 = open('doc_3.txt', 'r').read()
 
-# s1=set(file1.split())
-# s2=set(file2.split())
-# s3=set(file3.split())
+def merge_dict(dict1, dict2): # Function to merge two dictionaries, so that excess load due to a huge dictionary of words of all the documents, can be avoided.
+	for a, b in dict1.items():
+		for c, d in dict2.items():
+			if a==c:
+				dict2[a]+=dict1[c]
+				unidict[a] = dict2[a]
+			else:
+				unidict[c]=d
+	return unidict
+al = {'a': 20, 'cd': 12, 'abc':10}
+bl = {'a':10, 'abc': 1, 'xx': 14}
 
-# dist_s1 = s1-s2-s3
-# dist_s2 = s2-s1-s3
-# dist_s3 = s3-s2-s1
-
-# print len(dist_s1)
-# print len(dist_s2)
-# print len(dist_s3)
+print (merge_dict(al, bl))
