@@ -1,12 +1,13 @@
-args=raw_input()
-args_list=args.split()
+import sys
 
-files=len(args_list)
-uniset = list()
-for i in args_list:
+uniset = list()  # Declare a universal set which would contain the set of words of every document
+
+for i in sys.argv[1:]:
 	uniset.append(set(open(i, 'r').read().split()))
 
-
+def distinct(*params):
+	while params not in uniset:
+		out=params-uniset[]
 # file1 = open('doc_1.txt', 'r').read()
 # file2 = open('doc_2.txt', 'r').read()
 # file3 = open('doc_3.txt', 'r').read()
