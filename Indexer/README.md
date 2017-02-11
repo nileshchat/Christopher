@@ -1,3 +1,2 @@
 ##Usage:
-Transfer all the documents in a folder named "corpus" in the same directory as index.py.
-
+Corpus contains all the documents out of which the index is to be created.
