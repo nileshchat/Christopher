@@ -1,7 +1,7 @@
-# Information-Retrieval-Lab-Components
+# Christopher
 
-This repository contains all my python scripts for the Information Retrieval Course
+The repository contains all the components of an Information Retrieval System that I developed during my IR course.
+
 ## Indexer
 In this lies the code which makes an index of terms of all the documents in the corpus.
 
-*This will frequently be updated
