@@ -12,6 +12,8 @@ if __name__ == "__main__":
 	folderName = "corpus" # Folder where all the documents are present
 	postingListDict = index()
 
+	term_frequency = {}
+
 	try:
 		file = open("Postinglist", 'rb', buffering = 1)
 		list1 = pickle.load(file)
