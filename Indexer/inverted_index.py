@@ -54,16 +54,16 @@ class Inverted_index():
             term_frequency = document.count(newWord)
             if (len(self.postingList) != 0):
                 if newWord in self.postingList.keys():
-                    doc_freq_tup = tuple([document_name, term_frequency])
-                    self.postingList[newWord].append(doc_freq_tup)
+                    #doc_freq_tup = tuple([document_name, term_frequency])
+                    self.postingList[newWord][document_name] = term_frequency
                 else:
-                    doc_freq_tup = tuple([document_name, term_frequency])
-                    self.postingList[newWord] = []
-                    self.postingList[newWord].append(doc_freq_tup)
+                    #doc_freq_tup = tuple([document_name, term_frequency])
+                    self.postingList[newWord] = {}
+                    self.postingList[newWord][document_name] = term_frequency
             else:
-                doc_freq_tup = tuple([document_name, term_frequency])
-                self.postingList[newWord] = []
-                self.postingList[newWord].append(doc_freq_tup)
+                #doc_freq_tup = tuple([document_name, term_frequency])
+                self.postingList[newWord] = {}
+                self.postingList[newWord][document_name] = term_frequency
 
         return self.postingList
 

@@ -1,7 +1,10 @@
 import sys
 import os
 
-base_dir = os.getcwd()
-
+base_dir = "/home/nilesh/Documents/6th Semester/IR/en.docs.2011"
+directory_list = []
 for root, folders, file in os.walk(base_dir):
-    print(root)
+    for element in file:
+        element = os.path.join(root+"/"+element)
+        directory_list.append(element)
+        print(element)
