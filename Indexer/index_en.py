@@ -7,12 +7,6 @@ import math
 from collections import Counter
 
 
-def dot_product(document_vector, query_vector):
-    # returns the dot product of 2 vectors
-
-    return sum([Q * D for Q, D in zip(document_vector, query_vector)])
-
-
 def tf_idf_rank_list(term, index):
     # returns a sorted list of tf-idf score of a term in the query vector
     # format: [ ['doc1', w0], ['doc2', w1], .. ] where w0 > w1
@@ -66,53 +60,56 @@ if __name__ == "__main__":
     query_location = '/home/nilesh/Documents/6th Semester/IR/' \
                      'Information-Retrieval-Lab-Components-.git/Evaluation/en.topics.126-175.2011.xml'
 
+    try:
+        file = open("Postinglist", 'rb', buffering=1)
+        list1 = pickle.load(file)
+        print("Index Loaded Successfully!!")
+        print("Size of the Index: {}".format(len(list1)))
+        print("Time taken : " + str(time.time() - start) + " seconds")
 
-    file = open("Postinglist", 'rb', buffering=1)
-    list1 = pickle.load(file)
-    print("Index Loaded Successfully!!")
-    print("Size of the Index: {}".format(len(list1)))
-    print("Time taken : " + str(time.time() - start) + " seconds")
+        query_list = read_queries(query_location)
+        outputFile = open("sample_run.txt", "w")
 
-    query_list = read_queries(query_location)
+        for query_element in query_list:
+            query = query_element[1]
+            query = pipe.remove_punctuations(query)
+            query = pipe.stem(query)
+            query = pipe.remove_stop_words(query)
+            c = Counter()
+            for term in query:
+                c+= tf_idf_rank_list(term, list1)
 
-    print(query_list)
+            for x in range(0, len(query)):
+                outputFile.write(str(126 + k) + " ")
+                outputFile.write("Q0" + " ")
+                outputFile.write(str(query[x][1]) + " ")
+                outputFile.write(str(x + 1) + " ")
+                outputFile.write(str(query[x][0]) + " ")
+                outputFile.write("\n")
+            outputFile.close()
 
-    for query_element in query_list:
-        query = query_element[1]
-        query = pipe.remove_punctuations(query)
-        query = pipe.stem(query)
-        query = pipe.remove_stop_words(query)
+    except:
+        print("Couldn't find an Index. Index Generation in progress. \nThis will take some significant time!!")
+        for root, folders, file in os.walk(base_dir):
+            for document in file:
+                document_path = os.path.join(root + "/" + document)
+                doc = re.sub('<[^<]+>', "", open(document_path, 'r', buffering=1).read())
+                # -------------------------------------------------------------------------
+                # Standard Pipeline
+
+                punctuated = index.remove_punctuations(doc)
+                stemmed = index.stem(punctuated)
+                chopped_stopwords = index.remove_stop_words(stemmed)
+                # -------------------------------------------------------------------------
+                # Update Index
+
+                Index = index.create_index(chopped_stopwords, document)
+                print(count)
+                count += 1
 
 
-    # except:
-    #     print("Couldn't find an Index. Index Generation in progress. \nThis will take some significant time!!")
-    #     for root, folders, file in os.walk(base_dir):
-    #         for document in file:
-    #             document_path = os.path.join(root + "/" + document)
-    #             doc = re.sub('<[^<]+>', "", open(document_path, 'r', buffering=1).read())
-    #             # -------------------------------------------------------------------------
-    #             # Standard Pipeline
-    #
-    #             punctuated = index.remove_punctuations(doc)
-    #             stemmed = index.stem(punctuated)
-    #             chopped_stopwords = index.remove_stop_words(stemmed)
-    #             # -------------------------------------------------------------------------
-    #             # Update Index
-    #
-    #             Index = index.create_index(chopped_stopwords, document)
-    #             print(count)
-    #             count += 1
-    #
-    #     # query_list = read_queries(query_location)
-    #     #
-    #     # for query_element in query_list:
-    #     #     query = query_element[1]
-    #     #
-    #     #     for word in query:
-    #     #         posting_list = Index[word]
-    #
-    #     savedPickle = open("Postinglist", 'wb', buffering=1)
-    #     pickle.dump(index, savedPickle, pickle.HIGHEST_PROTOCOL)
-    #     print("Index created!")
-    #     print("Size of Index: {}".format(len(Index)))
-    #     print("Time taken : " + str(time.time() - start) + " seconds")
+        savedPickle = open("Postinglist", 'wb', buffering=1)
+        pickle.dump(index, savedPickle, pickle.HIGHEST_PROTOCOL)
+        print("Index created!")
+        print("Size of Index: {}".format(len(Index)))
+        print("Time taken : " + str(time.time() - start) + " seconds")
