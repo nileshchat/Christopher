@@ -1,3 +1,8 @@
+'''
+Author: Nilesh Chaturvedi
+Last Updated: 17th April, 2017
+'''
+
 from porter2stemmer import Porter2Stemmer
 import string
 

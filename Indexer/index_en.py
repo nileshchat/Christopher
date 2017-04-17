@@ -1,15 +1,19 @@
-from inverted_index import Inverted_index
+'''
+Author: Nilesh Chaturvedi
+Last Updated: 17th April, 2017
+'''
+
 import os
 import re
 import time
 import pickle
 import math
 from collections import Counter
-
+from inverted_index import Inverted_index
 
 def tf_idf_rank_list(term, index):
-    # returns a sorted list of tf-idf score of a term in the query vector
-    # format: [ ['doc1', w0], ['doc2', w1], .. ] where w0 > w1
+    # Returns a sorted list of tf-idf score of a term in the query vector
+    # Format: [ ['doc1', w0], ['doc2', w1], .. ] where w0 > w1
 
     retrieved_docs = {}
     posting_list = index[term]
@@ -33,7 +37,8 @@ def tf_idf_rank_list(term, index):
 
 
 def read_queries(filename):
-    # return a list of queries with their serial numbers
+    # Returns a list of queries with their serial numbers
+    # Format : [[126, 'Random Query'], [127, 'Another Random Query'], ..]
 
     list = open(filename, 'r').readlines()
     new_list = []
@@ -55,20 +60,25 @@ if __name__ == "__main__":
     start = time.time()
     index = Inverted_index()
     pipe = Inverted_index()
-    base_dir = "/home/nilesh/Documents/6th Semester/IR/en.docs.2011"
     count = 0
+    # Give the location where files to be indexed are there.
+    base_dir = "/home/nilesh/Documents/6th Semester/IR/en.docs.2011"
+    
+    # Give the location of file which contains queries.
     query_location = '/home/nilesh/Documents/6th Semester/IR/' \
                      'Information-Retrieval-Lab-Components-.git/Evaluation/en.topics.126-175.2011.xml'
 
+    # Case where The index has already been created.
     try:
-        file = open("Postinglist", 'rb', buffering=1)
+        file = open("Index", 'rb', buffering=1)
         list1 = pickle.load(file)
         print("Index Loaded Successfully!!")
         print("Size of the Index: {}".format(len(list1)))
-        print("Time taken : " + str(time.time() - start) + " seconds")
+        print("Time taken to load the Index: " + str(time.time() - start) + " seconds")
 
         query_list = read_queries(query_location)
         outputFile = open("sample_run.txt", "w")
+        flag = 126
 
         for query_element in query_list:
             query = query_element[1]
@@ -79,15 +89,19 @@ if __name__ == "__main__":
             for term in query:
                 c+= tf_idf_rank_list(term, list1)
 
-            for x in range(0, len(query)):
-                outputFile.write(str(126 + k) + " ")
-                outputFile.write("Q0" + " ")
-                outputFile.write(str(query[x][1]) + " ")
-                outputFile.write(str(x + 1) + " ")
-                outputFile.write(str(query[x][0]) + " ")
-                outputFile.write("\n")
-            outputFile.close()
+            rank_list = c.most_common()
 
+            for result in range(0,6):
+                outputFile.write(str(flag) + " ")
+                outputFile.write("Q0" + " ")
+                outputFile.write(str(rank_list[result][0]) + " ")
+                outputFile.write(str(result+1) + " ")
+                outputFile.write(str(rank_list[result][1]) + "\n")
+            flag += 1
+
+        outputFile.close()
+
+    # Case where the index needs to be created.
     except:
         print("Couldn't find an Index. Index Generation in progress. \nThis will take some significant time!!")
         for root, folders, file in os.walk(base_dir):
@@ -108,7 +122,7 @@ if __name__ == "__main__":
                 count += 1
 
 
-        savedPickle = open("Postinglist", 'wb', buffering=1)
+        savedPickle = open("Index", 'wb', buffering=1)
         pickle.dump(index, savedPickle, pickle.HIGHEST_PROTOCOL)
         print("Index created!")
         print("Size of Index: {}".format(len(Index)))
